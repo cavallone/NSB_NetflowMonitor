@@ -3,12 +3,13 @@
 
 import sys
 import subprocess
-import time
+import datetime
 import MySQLdb
+from datetime import datetime, timedelta
 
-t = time.time()
-nowdate = time.strftime('%Y-%m-%d', time.localtime(t))
-nowtime = time.strftime('%Y%m%d%H%M', time.localtime(t))
+now = datetime.now() - timedelta(seconds=90)
+nowdate = datetime.strftime(now, '%Y-%m-%d')
+nowtime = datetime.strftime(now, '%Y%m%d%H%M')
 
 flow = subprocess.Popen(args = 'nfdump -r /nfs/netflow/'+nowdate+'/nfcapd.'+nowtime, 
                         shell = True, 
@@ -18,8 +19,23 @@ s = s.strip()
 flows = s.splitlines()
 flows = flows[1:-4]
 
-db = MySQLdb.connect(host = 'localhost', user = 'root', passwd = 'csyang')
+db = MySQLdb.connect(host = 'localhost', user = 'root', passwd = 'csyang', db = 'nsb_netflow')
 cursor = db.cursor()
 
 for f in flows:
 	item = f.split()
+	starttime = item[1]
+	sip = item[4].split(':')[0]
+	sport = item[4].split(':')[1]
+	dip = item[6].split(':')[0]
+	dport = item[6].split(':')[1]
+	sql = '''INSERT INTO record(date, time, protocol, src_ip, src_port, dst_ip, dst_port)
+                       VALUES(item[0], starttime[:8], sip, sport, dip, dport)'''
+
+	try:
+		cursor.execute(sql)
+		db.commit
+	except:
+		print 'cannot write in db'
+
+db.close
