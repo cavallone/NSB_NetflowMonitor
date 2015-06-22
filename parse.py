@@ -14,7 +14,7 @@ now = datetime.now() - timedelta(seconds=90)
 nowdate = datetime.strftime(now, '%Y-%m-%d')
 nowtime = datetime.strftime(now, '%Y%m%d%H%M')
 
-flow = subprocess.Popen(args = 'nfdump -r /nfs/netflow/'+nowdate+'/nfcapd.'+nowtime, 
+flow = subprocess.Popen(args = 'nfdump -r /netflow/flow/'+nowdate+'/nfcapd.'+nowtime, 
                         shell = True, 
                         stdout = subprocess.PIPE)
 s = flow.stdout.read()
