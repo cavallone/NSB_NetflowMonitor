@@ -7,8 +7,7 @@ import datetime
 import MySQLdb
 from datetime import datetime, timedelta
 
-namedict = {'10.1.1.2':'(Staff)', '10.1.3.2':'(WebServer)', '10.1.4.2':'(DBServer)', '10.1.5.3':'(BossComputer)', '10.1.2.2':'(MailServer)',
-           '10.1.5.2':'(NAT)', '10.1.2.3':'(NAT)', '10.1.3.3':'(NAT)', '10.1.4.3':'(NAT)', '10.1.1.3':'(NAT)'}
+namedict = {'10.1.1.1':'(ScoringBoard)', '10.1.2.2':'(UserRoute)', '10.1.1.2':'(UserRoute)', '10.1.100.3':'(FireWall)', '10.1.2.3':'(FireWall)','10.1.10.3':'(FireWall)', '10.1.10.1':'(WebSite)', '10.1.100.150':'(BigBoss)', '10.1.100.1':'(WebSiteInside)', '10.1.100.50':'(FileServer)', '10.1.100.25':'(Staff)'}
 
 now = datetime.now() - timedelta(seconds=90)
 nowdate = datetime.strftime(now, '%Y-%m-%d')
