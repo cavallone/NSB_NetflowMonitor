@@ -34,22 +34,31 @@ for f in flows:
 
 	if sip in namedict:
 		sip = sip + namedict[sip]
+	elif '10.8.0.' in sip:
+		sip = sip + '(User)'
 	else:
 		pass
 
 	if dip in namedict:
 		dip = dip + namedict[dip]
+	elif '10.8.0.' in dip:
+		dip = dip + '(User)'
 	else:
 		pass
 	
 	if sip.split('.')[0] == '10' and dip.split('.')[0] == '10' and dip.split('.')[3] != '255' :
-		sql = 'INSERT INTO record2(date, time, protocol, src_ip, src_port, dst_ip, dst_port)VALUES(\'{0}\', \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', \'{6}\')'.format(item[0], starttime[:8], item[3], sip, sport, dip, dport)
+		if item[9] is 'M':			
+			sql = 'INSERT INTO record(date, time, protocol, src_ip, src_port, dst_ip, dst_port, packet_count, byte_count)VALUES(\'{0}\', \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', \'{6}\', \'{7}\', \'{8}\')'.format(item[0], starttime[:8], item[3], sip, sport, dip, dport, item[7], item[8]+' '+item[9])
+		else:
+			sql = 'INSERT INTO record(date, time, protocol, src_ip, src_port, dst_ip, dst_port, packet_count, byte_count)VALUES(\'{0}\', \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', \'{6}\', \'{7}\', \'{8}\')'.format(item[0], starttime[:8], item[3], sip, sport, dip, dport, item[7], item[8])
 	else:
-		sql = 'INSERT INTO record(date, time, protocol, src_ip, src_port, dst_ip, dst_port)VALUES(\'{0}\', \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', \'{6}\')'.format(item[0], starttime[:8], item[3], sip, sport, dip, dport)
-	
+		sql = None
+#		sql = 'INSERT INTO record(date, time, protocol, src_ip, src_port, dst_ip, dst_port)VALUES(\'{0}\', \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', \'{6}\')'.format(item[0], starttime[:8], item[3], sip, sport, dip, dport)
+
 	try:
-		cursor.execute(sql)
-		db.commit()
+		if sql:
+			cursor.execute(sql)
+			db.commit()
 	except:
 		print 'cannot write in db'
 
